@@ -1,0 +1,63 @@
+# sctools — cobalt self-hosted com YouTube habilitado
+#
+# uso:
+#   cp .env.example .env
+#   docker compose up -d
+#
+# IMPORTANTE: não defina DISABLED_SERVICES com "youtube" aqui,
+# senão o YouTube volta a ser desabilitado.
+
+services:
+    cobalt:
+        image: ghcr.io/imputnet/cobalt:11
+
+        init: true
+        read_only: true
+        restart: unless-stopped
+        container_name: sctools-api
+
+        ports:
+            - ${API_PORT:-9000}:9000/tcp
+
+        environment:
+            # URL pública da API. troque pelo seu domínio em produção.
+            API_URL: ${API_URL:-http://localhost:9000/}
+
+            # YouTube habilitado por padrão (não há DISABLED_SERVICES).
+
+            # gerador de poToken/visitor_data — melhora a confiabilidade do YouTube
+            YOUTUBE_SESSION_SERVER: http://yt-session-generator:8080/
+            YOUTUBE_SESSION_INNERTUBE_CLIENT: ${YOUTUBE_SESSION_INNERTUBE_CLIENT:-WEB_EMBEDDED}
+            YOUTUBE_ALLOW_BETTER_AUDIO: ${YOUTUBE_ALLOW_BETTER_AUDIO:-1}
+
+            # descomente para permitir HLS do YouTube (fallback p/ alguns vídeos):
+            # ENABLE_DEPRECATED_YOUTUBE_HLS: always
+
+            # se quiser cookies (conteúdo que exige login), descomente:
+            # COOKIE_PATH: /cookies.json
+
+        depends_on:
+            - yt-session-generator
+
+        labels:
+            - com.centurylinklabs.watchtower.scope=sctools
+
+        # volumes:
+        #     - ./cookies.json:/cookies.json
+
+    yt-session-generator:
+        image: ghcr.io/imputnet/yt-session-generator:webserver
+
+        init: true
+        restart: unless-stopped
+        container_name: sctools-yt-session
+
+        labels:
+            - com.centurylinklabs.watchtower.scope=sctools
+
+    watchtower:
+        image: ghcr.io/containrrr/watchtower
+        restart: unless-stopped
+        command: --cleanup --scope sctools --interval 900 --include-restarting
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock

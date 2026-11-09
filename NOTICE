@@ -1,0 +1,24 @@
+sctools
+=======
+
+This project is a fork of cobalt:
+
+    https://github.com/imputnet/cobalt
+
+Original code copyright (c) imput and cobalt contributors.
+
+Licenses of the original project:
+- api/  : GNU Affero General Public License v3.0 (AGPL-3.0) — see api/LICENSE
+- web/  : Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+          International (CC-BY-NC-SA-4.0) — see web/LICENSE
+- other : GNU Affero General Public License v3.0 (AGPL-3.0) — see LICENSE
+
+Changes made in this fork:
+- YouTube is enabled by default for self-hosted instances
+  (no "youtube" entry in DISABLED_SERVICES).
+- Added a ready-to-use compose.yaml including yt-session-generator.
+- Added self-hosting / YouTube deployment documentation.
+- Rebranded the top-level README as sctools, keeping the original as
+  README.cobalt.md.
+
+This fork remains licensed under the same licenses as the original.
