@@ -18,6 +18,21 @@ aparece em `DISABLED_SERVICES` (ver `api/src/core/env.js` e
 `api/src/processing/url.js`). Rodando a própria instância **sem** essa variável,
 o YouTube é habilitado novamente.
 
+## Interface "Nosso Site"
+
+A pasta [`site/`](site/) tem uma interface própria, leve e independente do frontend
+original do cobalt: cola o link, escolhe o modo (vídeo + áudio, só áudio, só vídeo),
+a qualidade e baixa. Sem build, sem dependências — é HTML/CSS/JS puro.
+
+```bash
+# sobe API (9000) + interface (3000) de uma vez
+./run-local.sh
+```
+
+Depois abra **http://localhost:3000**.
+
+> O frontend original do cobalt continua em `web/` caso você queira usá-lo.
+
 ## O que muda em relação ao cobalt
 
 - **YouTube habilitado por padrão** no `compose.yaml` (sem `DISABLED_SERVICES=youtube`).
